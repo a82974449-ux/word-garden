@@ -6,13 +6,13 @@ export async function callGemini(prompt, maxOutputTokens) {
   if (!key) {
     throw new Error("GEMINI_API_KEY is not configured on the server");
   }
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${key}`;
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens, temperature: 0.7 },
+      generationConfig: { maxOutputTokens },
     }),
   });
   if (!response.ok) {
