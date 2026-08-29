@@ -12,7 +12,10 @@ export async function callGemini(prompt, maxOutputTokens) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens },
+      generationConfig: {
+        maxOutputTokens: Math.max(maxOutputTokens, 500),
+        thinkingConfig: { thinkingLevel: "MINIMAL" },
+      },
     }),
   });
   if (!response.ok) {
