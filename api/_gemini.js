@@ -33,5 +33,17 @@ export async function callGemini(prompt, maxOutputTokens) {
     data.candidates[0].content.parts &&
     data.candidates[0].content.parts[0] &&
     data.candidates[0].content.parts[0].text;
-  return (text || "").replace(/```json|```/g, "").trim();
+  const clean = (text || "").replace(/```json|```/g, "").trim();
+  const firstBrace = clean.indexOf("{");
+  const firstBracket = clean.indexOf("[");
+  let start = -1;
+  if (firstBrace === -1) start = firstBracket;
+  else if (firstBracket === -1) start = firstBrace;
+  else start = Math.min(firstBrace, firstBracket);
+  if (start === -1) return clean;
+  const isArray = clean[start] === "[";
+  const endChar = isArray ? "]" : "}";
+  const end = clean.lastIndexOf(endChar);
+  if (end === -1 || end < start) return clean;
+  return clean.slice(start, end + 1);
 }
